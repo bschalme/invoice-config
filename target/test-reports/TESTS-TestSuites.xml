@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites>
-  <testsuite errors="0" failures="1" hostname="anakin" id="0" name="EmailerServiceSpec" package="ca.airspeed.common" tests="3" time="0.187" timestamp="2012-05-09T02:31:32">
+  <testsuite errors="0" failures="0" hostname="anakin" id="0" name="EmailerServiceSpec" package="ca.airspeed.common" tests="3" time="0.078" timestamp="2012-05-09T03:26:09">
       <properties />
 
-      <testcase classname="ca.airspeed.common.EmailerServiceSpec" name="greenmail was initialized" time="0.016" />
+      <testcase classname="ca.airspeed.common.EmailerServiceSpec" name="greenmail was initialized" time="0.0" />
 
       <testcase classname="ca.airspeed.common.EmailerServiceSpec" name="emailerService was initialized" time="0.016" />
 
-      <testcase classname="ca.airspeed.common.EmailerServiceSpec" name="sends a simple email" time="0.094">
-          <failure message="Condition not satisfied:&#xa;&#xa;greenMail.receivedMessages.size() == 1&#xa;|         |                |      |&#xa;|         []               0      false&#xa;grails.plugin.greenmail.GreenMail@b9cb6f&#xa;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Condition not satisfied:
-
-greenMail.receivedMessages.size() == 1
-|         |                |      |
-|         []               0      false
-grails.plugin.greenmail.GreenMail@b9cb6f
-
-	at ca.airspeed.common.EmailerServiceSpec.sends a simple email(EmailerServiceSpec.groovy:44)
-</failure>
-
-      </testcase>
+      <testcase classname="ca.airspeed.common.EmailerServiceSpec" name="sends a simple email" time="0.047" />
 
       <system-out><![CDATA[--Output from greenmail was initialized--
 --Output from emailerService was initialized--
@@ -26,8 +15,6 @@ grails.plugin.greenmail.GreenMail@b9cb6f
 ]]></system-out>
 
       <system-err><![CDATA[--Output from greenmail was initialized--
---Output from emailerService was initialized--
---Output from sends a simple email--
 java.lang.RuntimeException: Reloading agent exited via exception, please raise a jira
 	at com.springsource.loaded.agent.ClassPreProcessorAgentAdapter.transform(ClassPreProcessorAgentAdapter.java:91)
 	at sun.instrument.TransformerManager.transform(TransformerManager.java:169)
@@ -52,7 +39,7 @@ java.lang.RuntimeException: Reloading agent exited via exception, please raise a
 	at groovy.lang.GroovyClassLoader.parseClass(GroovyClassLoader.java:224)
 	at groovy.lang.GroovyClassLoader$parseClass$0.call(Unknown Source)
 	at org.codehaus.groovy.grails.plugins.scaffolding.ScaffoldingGrailsPlugin.createScaffoldedInstance(ScaffoldingGrailsPlugin.groovy:178)
-	at sun.reflect.GeneratedMethodAccessor500.invoke(Unknown Source)
+	at sun.reflect.GeneratedMethodAccessor495.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
 	at java.lang.reflect.Method.invoke(Method.java:597)
 	at com.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1237)
@@ -108,11 +95,13 @@ java.lang.RuntimeException: Reloading agent exited via exception, please raise a
 	at groovy.lang.Closure.call(Closure.java:406)
 	at groovy.lang.Closure.run(Closure.java:490)
 	at java.lang.Thread.run(Thread.java:662)
-Caused by: java.lang.UnsupportedOperationException: unable to watch ca.airspeed.accounting.CustomerController. Computed location=\groovy\script
+Caused by: java.lang.UnsupportedOperationException: unable to watch ca.airspeed.common.EmailController. Computed location=\groovy\script
 	at com.springsource.loaded.agent.SpringLoadedPreProcessor.getWatchPathFromProtectionDomain(SpringLoadedPreProcessor.java:425)
 	at com.springsource.loaded.agent.SpringLoadedPreProcessor.preProcess(SpringLoadedPreProcessor.java:161)
 	at com.springsource.loaded.agent.ClassPreProcessorAgentAdapter.transform(ClassPreProcessorAgentAdapter.java:89)
 	... 78 more
+--Output from emailerService was initialized--
+--Output from sends a simple email--
 ]]></system-err>
 
   </testsuite>
