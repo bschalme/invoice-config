@@ -1,18 +1,119 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites>
-  <testsuite errors="0" failures="0" hostname="anakin" id="0" name="EmailerServiceSpec" package="ca.airspeed.common" tests="0" time="0.188" timestamp="2012-05-08T23:02:05">
+  <testsuite errors="0" failures="1" hostname="anakin" id="0" name="EmailerServiceSpec" package="ca.airspeed.common" tests="3" time="0.187" timestamp="2012-05-09T02:31:32">
       <properties />
 
-      <testcase classname="junit.framework.JUnit4TestCaseFacade" name="ca.airspeed.common.EmailerServiceSpec" time="0.063">
-          <error message="Cannot get property &apos;mainContext&apos; on null object" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot get property &apos;mainContext&apos; on null object
-	at grails.plugin.spock.IntegrationSpec.$spock_initializeSharedFields(IntegrationSpec.groovy)
-</error>
+      <testcase classname="ca.airspeed.common.EmailerServiceSpec" name="greenmail was initialized" time="0.016" />
+
+      <testcase classname="ca.airspeed.common.EmailerServiceSpec" name="emailerService was initialized" time="0.016" />
+
+      <testcase classname="ca.airspeed.common.EmailerServiceSpec" name="sends a simple email" time="0.094">
+          <failure message="Condition not satisfied:&#xa;&#xa;greenMail.receivedMessages.size() == 1&#xa;|         |                |      |&#xa;|         []               0      false&#xa;grails.plugin.greenmail.GreenMail@b9cb6f&#xa;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Condition not satisfied:
+
+greenMail.receivedMessages.size() == 1
+|         |                |      |
+|         []               0      false
+grails.plugin.greenmail.GreenMail@b9cb6f
+
+	at ca.airspeed.common.EmailerServiceSpec.sends a simple email(EmailerServiceSpec.groovy:44)
+</failure>
 
       </testcase>
 
-      <system-out><![CDATA[]]></system-out>
+      <system-out><![CDATA[--Output from greenmail was initialized--
+--Output from emailerService was initialized--
+--Output from sends a simple email--
+]]></system-out>
 
-      <system-err><![CDATA[]]></system-err>
+      <system-err><![CDATA[--Output from greenmail was initialized--
+--Output from emailerService was initialized--
+--Output from sends a simple email--
+java.lang.RuntimeException: Reloading agent exited via exception, please raise a jira
+	at com.springsource.loaded.agent.ClassPreProcessorAgentAdapter.transform(ClassPreProcessorAgentAdapter.java:91)
+	at sun.instrument.TransformerManager.transform(TransformerManager.java:169)
+	at sun.instrument.InstrumentationImpl.transform(InstrumentationImpl.java:365)
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClassCond(ClassLoader.java:631)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:615)
+	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:141)
+	at groovy.lang.GroovyClassLoader.access$300(GroovyClassLoader.java:55)
+	at groovy.lang.GroovyClassLoader$ClassCollector.createClass(GroovyClassLoader.java:519)
+	at groovy.lang.GroovyClassLoader$ClassCollector.onClassNode(GroovyClassLoader.java:536)
+	at groovy.lang.GroovyClassLoader$ClassCollector.call(GroovyClassLoader.java:540)
+	at org.codehaus.groovy.control.CompilationUnit$14.call(CompilationUnit.java:776)
+	at org.codehaus.groovy.control.CompilationUnit.applyToPrimaryClassNodes(CompilationUnit.java:967)
+	at org.codehaus.groovy.control.CompilationUnit.doPhaseOperation(CompilationUnit.java:546)
+	at org.codehaus.groovy.control.CompilationUnit.processPhaseOperations(CompilationUnit.java:524)
+	at org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:501)
+	at groovy.lang.GroovyClassLoader.doParseClass(GroovyClassLoader.java:306)
+	at groovy.lang.GroovyClassLoader.parseClass(GroovyClassLoader.java:287)
+	at groovy.lang.GroovyClassLoader.parseClass(GroovyClassLoader.java:267)
+	at groovy.lang.GroovyClassLoader.parseClass(GroovyClassLoader.java:214)
+	at groovy.lang.GroovyClassLoader.parseClass(GroovyClassLoader.java:224)
+	at groovy.lang.GroovyClassLoader$parseClass$0.call(Unknown Source)
+	at org.codehaus.groovy.grails.plugins.scaffolding.ScaffoldingGrailsPlugin.createScaffoldedInstance(ScaffoldingGrailsPlugin.groovy:178)
+	at sun.reflect.GeneratedMethodAccessor500.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at com.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1237)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:90)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite$StaticMetaMethodSiteNoUnwrapNoCoerce.invoke(StaticMetaMethodSite.java:148)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.callStatic(StaticMetaMethodSite.java:99)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callStatic(AbstractCallSite.java:169)
+	at org.codehaus.groovy.grails.plugins.scaffolding.ScaffoldingGrailsPlugin.configureScaffoldingController(ScaffoldingGrailsPlugin.groovy:115)
+	at org.codehaus.groovy.grails.plugins.scaffolding.ScaffoldingGrailsPlugin$configureScaffoldingController.callStatic(Unknown Source)
+	at org.codehaus.groovy.grails.plugins.scaffolding.ScaffoldingGrailsPlugin.configureScaffolding(ScaffoldingGrailsPlugin.groovy:90)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at com.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1237)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:90)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:233)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1047)
+	at groovy.lang.ExpandoMetaClass.invokeMethod(ExpandoMetaClass.java:1110)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:877)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:992)
+	at groovy.lang.ExpandoMetaClass.invokeMethod(ExpandoMetaClass.java:1110)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:877)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:697)
+	at groovy.lang.GroovyObjectSupport.invokeMethod(GroovyObjectSupport.java:44)
+	at groovy.lang.MetaClassImpl.invokeMethodOnGroovyObject(MetaClassImpl.java:1112)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1006)
+	at groovy.lang.ExpandoMetaClass.invokeMethod(ExpandoMetaClass.java:1110)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:877)
+	at org.codehaus.groovy.runtime.callsite.PogoMetaClassSite.callCurrent(PogoMetaClassSite.java:66)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:145)
+	at org.codehaus.groovy.grails.plugins.scaffolding.ScaffoldingGrailsPlugin$_closure2_closure10.doCall(ScaffoldingGrailsPlugin.groovy:77)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at com.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1237)
+	at org.codehaus.groovy.runtime.callsite.PogoMetaMethodSite$PogoCachedMethodSite.invoke(PogoMetaMethodSite.java:226)
+	at org.codehaus.groovy.runtime.callsite.PogoMetaMethodSite.callCurrent(PogoMetaMethodSite.java:52)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:141)
+	at org.codehaus.groovy.grails.plugins.scaffolding.ScaffoldingGrailsPlugin$_closure2_closure10.doCall(ScaffoldingGrailsPlugin.groovy)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at com.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1237)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:90)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:233)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1047)
+	at groovy.lang.ExpandoMetaClass.invokeMethod(ExpandoMetaClass.java:1110)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:877)
+	at groovy.lang.Closure.call(Closure.java:412)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at groovy.lang.Closure.run(Closure.java:490)
+	at java.lang.Thread.run(Thread.java:662)
+Caused by: java.lang.UnsupportedOperationException: unable to watch ca.airspeed.accounting.CustomerController. Computed location=\groovy\script
+	at com.springsource.loaded.agent.SpringLoadedPreProcessor.getWatchPathFromProtectionDomain(SpringLoadedPreProcessor.java:425)
+	at com.springsource.loaded.agent.SpringLoadedPreProcessor.preProcess(SpringLoadedPreProcessor.java:161)
+	at com.springsource.loaded.agent.ClassPreProcessorAgentAdapter.transform(ClassPreProcessorAgentAdapter.java:89)
+	... 78 more
+]]></system-err>
 
   </testsuite>
 </testsuites>
