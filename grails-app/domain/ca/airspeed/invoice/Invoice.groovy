@@ -1,6 +1,5 @@
 package ca.airspeed.invoice
 
-import ca.airspeed.accounting.Customer;
 
 class Invoice {
 
@@ -12,8 +11,9 @@ class Invoice {
 		emailTemplatePlain(blank:false)
     }
 	
-	static belongsTo = [customer: Customer]
+	static belongsTo = [job:Job]
 	
+	static hasMany = [invoiceLine:InvoiceLine]
 	String invoiceNumber
 	String deliveryMethod
 	String deliveryStatus

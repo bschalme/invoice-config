@@ -36,9 +36,7 @@ class EmailerServiceSpec extends IntegrationSpec {
 	def "sends a simple email"() {
 		when:
 		def mail = [to: ["Brian Schalme <bschalme@airspeed.ca>"]]
-		// def mail = [to: ['bschalme@airspeed.ca']]
 		mail.from = "Darth Vader <dvader@empire.org>"
-		// mail.from = 'dvader@empire.org'
 		mail.subject = "Your Choice of The Force"
 		mail.text = "Pick one: the Good Side or the Dark Side."
 		emailerService.sendEmail(mail)

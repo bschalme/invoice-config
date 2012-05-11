@@ -1,6 +1,5 @@
 package ca.airspeed.invoice
 
-import ca.airspeed.accounting.Customer
 
 class InvoiceRecipient {
 
@@ -11,7 +10,7 @@ class InvoiceRecipient {
 		email(email:true)
 	}
 
-	static belongsTo = [customer:Customer]
+	static belongsTo = [job:Job]
 
 	String type
 	String firstName
