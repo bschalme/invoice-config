@@ -23,4 +23,9 @@ class Invoice {
 	String toString() {
 		return invoiceNumber
 	}
+	
+	def makeMail() {
+		def mail=[:]
+		return mail
+	}
 }

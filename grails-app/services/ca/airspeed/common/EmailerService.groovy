@@ -8,9 +8,16 @@ class EmailerService {
 	boolean transactional = false
 	
 	MailSender mailSender
+	
+	def mailService
 
-    def emailInvoice() {
-
+    def emailInvoice(mail) {
+		mailService.sendMail {
+			to  mail.to
+			from mail.from
+			subject mail.subject
+			body mail.text
+		}
     }
 	
 	def sendEmail(mail) {

@@ -3,157 +3,179 @@ package ca.airspeed.invoice
 
 
 import org.junit.*
+
+import ca.airspeed.invoice.Invoice;
+import ca.airspeed.invoice.InvoiceController;
+import ca.airspeed.invoice.Job;
 import grails.test.mixin.*
 
 @TestFor(InvoiceController)
-@Mock(Invoice)
+@Mock([Invoice, Job, Customer, Company, Tenant])
 class InvoiceControllerTests {
 
 
-    def populateValidParams(params) {
-      assert params != null
-      // TODO: Populate valid properties like...
-      //params["name"] = 'someValidName'
-    }
+	def populateValidParams(params) {
+		assert params != null
+		params["invoiceNumber"] = '362'
+		params["deliveryStatus"] = 'ToBeDelivered'
+		params["deliveryMethod"] = 'Email'
+		params["emailTemplateHtml"] = ' '
+		params["emailTemplatePlain"] = '/tmp/blart'
+		if (Job.list().size() == 0) {
+			seedDb()
+		}
+		params["job.id"] = Job.get(1).id
+	}
 
-    void testIndex() {
-        controller.index()
-        assert "/invoice/list" == response.redirectedUrl
-    }
+	void seedDb() {
+		def tenant = new Tenant(name:'4020774 Manitoba Ltd.').save(failOnError: true)
+		def airspeed = new Company(tenant:tenant, name:'Airspeed Consulting', invoiceFirstName:'Brian', invoiceLastName:'Schalme', invoiceEmail:'bschalme@airspeed.ca').save(failOnError: true)
+		def megaCorp = new Customer(company:airspeed, customerRefListId:'334rddd2e234e', fullName:'MegaCorp', defaultDeliveryMethod:'Email').save(failOnError: true)
+		def sonicEsb = new Job(customer:megaCorp, name:'Sonic ESB Integration').save(flush: true, failOnError: true)
+	}
 
-    void testList() {
+	void testIndex() {
+		controller.index()
+		assert "/invoice/list" == response.redirectedUrl
+	}
 
-        def model = controller.list()
+	void testList() {
 
-        assert model.invoiceInstanceList.size() == 0
-        assert model.invoiceInstanceTotal == 0
-    }
+		def model = controller.list()
 
-    void testCreate() {
-       def model = controller.create()
+		assert model.invoiceInstanceList.size() == 0
+		assert model.invoiceInstanceTotal == 0
+	}
 
-       assert model.invoiceInstance != null
-    }
+	void testCreate() {
+		def model = controller.create()
 
-    void testSave() {
-        controller.save()
+		assert model.invoiceInstance != null
+	}
 
-        assert model.invoiceInstance != null
-        assert view == '/invoice/create'
+	void testSave() {
+		controller.save()
 
-        response.reset()
+		assert model.invoiceInstance != null
+		assert view == '/invoice/create'
 
-        populateValidParams(params)
-        controller.save()
+		response.reset()
 
-        assert response.redirectedUrl == '/invoice/show/1'
-        assert controller.flash.message != null
-        assert Invoice.count() == 1
-    }
+		populateValidParams(params)
+		controller.save()
 
-    void testShow() {
-        controller.show()
+		assert response.redirectedUrl == '/invoice/show/1'
+		assert controller.flash.message != null
+		assert Invoice.count() == 1
+	}
 
-        assert flash.message != null
-        assert response.redirectedUrl == '/invoice/list'
+	void testShow() {
+		controller.show()
 
-
-        populateValidParams(params)
-        def invoice = new Invoice(params)
-
-        assert invoice.save() != null
-
-        params.id = invoice.id
-
-        def model = controller.show()
-
-        assert model.invoiceInstance == invoice
-    }
-
-    void testEdit() {
-        controller.edit()
-
-        assert flash.message != null
-        assert response.redirectedUrl == '/invoice/list'
+		assert flash.message != null
+		assert response.redirectedUrl == '/invoice/list'
 
 
-        populateValidParams(params)
-        def invoice = new Invoice(params)
+		populateValidParams(params)
+		def invoice = new Invoice(params)
 
-        assert invoice.save() != null
+		assert invoice.save() != null
 
-        params.id = invoice.id
+		params.id = invoice.id
 
-        def model = controller.edit()
+		def model = controller.show()
 
-        assert model.invoiceInstance == invoice
-    }
+		assert model.invoiceInstance == invoice
+	}
 
-    void testUpdate() {
-        controller.update()
+	void testEdit() {
+		controller.edit()
 
-        assert flash.message != null
-        assert response.redirectedUrl == '/invoice/list'
-
-        response.reset()
+		assert flash.message != null
+		assert response.redirectedUrl == '/invoice/list'
 
 
-        populateValidParams(params)
-        def invoice = new Invoice(params)
+		populateValidParams(params)
+		def invoice = new Invoice(params)
 
-        assert invoice.save() != null
+		assert invoice.save() != null
 
-        // test invalid parameters in update
-        params.id = invoice.id
-        //TODO: add invalid values to params object
+		params.id = invoice.id
 
-        controller.update()
+		def model = controller.edit()
 
-        assert view == "/invoice/edit"
-        assert model.invoiceInstance != null
+		assert model.invoiceInstance == invoice
+	}
 
-        invoice.clearErrors()
+	void testUpdate() {
+		controller.update()
 
-        populateValidParams(params)
-        controller.update()
+		assert flash.message != null
+		assert response.redirectedUrl == '/invoice/list'
 
-        assert response.redirectedUrl == "/invoice/show/$invoice.id"
-        assert flash.message != null
+		response.reset()
 
-        //test outdated version number
-        response.reset()
-        invoice.clearErrors()
 
-        populateValidParams(params)
-        params.id = invoice.id
-        params.version = -1
-        controller.update()
+		populateValidParams(params)
+		def invoice = new Invoice(params)
 
-        assert view == "/invoice/edit"
-        assert model.invoiceInstance != null
-        assert model.invoiceInstance.errors.getFieldError('version')
-        assert flash.message != null
-    }
+		assert invoice.save() != null
 
-    void testDelete() {
-        controller.delete()
-        assert flash.message != null
-        assert response.redirectedUrl == '/invoice/list'
+		// test invalid parameters in update
+		params.id = invoice.id
+		params.deliveryMethod = 'NoSuchDeliveryMethod'
 
-        response.reset()
+		controller.update()
 
-        populateValidParams(params)
-        def invoice = new Invoice(params)
+		assert view == "/invoice/edit"
+		assert model.invoiceInstance != null
 
-        assert invoice.save() != null
-        assert Invoice.count() == 1
+		invoice.clearErrors()
 
-        params.id = invoice.id
+		populateValidParams(params)
+		controller.update()
 
-        controller.delete()
+		assert response.redirectedUrl == "/invoice/show/$invoice.id"
+		assert flash.message != null
 
-        assert Invoice.count() == 0
-        assert Invoice.get(invoice.id) == null
-        assert response.redirectedUrl == '/invoice/list'
-    }
+		//test outdated version number
+		response.reset()
+		invoice.clearErrors()
+
+		populateValidParams(params)
+		params.id = invoice.id
+		params.version = -1
+		controller.update()
+
+		assert view == "/invoice/edit"
+		assert model.invoiceInstance != null
+		assert model.invoiceInstance.errors.getFieldError('version')
+		assert flash.message != null
+	}
+
+	void testDelete() {
+		controller.delete()
+		assert flash.message != null
+		assert response.redirectedUrl == '/invoice/list'
+
+		response.reset()
+
+		populateValidParams(params)
+		def invoice = new Invoice(params)
+
+		assert invoice.save() != null
+		assert Invoice.count() == 1
+
+		params.id = invoice.id
+
+		controller.delete()
+
+		assert Invoice.count() == 0
+		assert Invoice.get(invoice.id) == null
+		assert response.redirectedUrl == '/invoice/list'
+	}
+	
+	void testEmail() {
+		assert controller.email() != null
+	}
 }

@@ -63,7 +63,7 @@ grails.hibernate.cache.queries = true
 environments {
     development {
 		grails.mail.host = "localhost"
-		grails.mail.port = com.icegreen.greenmail.util.ServerSetupTest.SMTP.port
+		// grails.mail.port = com.icegreen.greenmail.util.ServerSetupTest.SMTP.port
         grails.logging.jul.usebridge = true
     }
 	test {

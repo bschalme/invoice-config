@@ -2,11 +2,7 @@ package ca.airspeed.invoice
 
 
 
-
 import org.junit.*
-
-import ca.airspeed.invoice.Tenant;
-import ca.airspeed.invoice.TenantController;
 import grails.test.mixin.*
 
 @TestFor(TenantController)
@@ -16,8 +12,7 @@ class TenantControllerTests {
 
     def populateValidParams(params) {
       assert params != null
-      // TODO: Populate valid properties like...
-      //params["name"] = 'someValidName'
+	  params["name"] = '4020774 Manitoba Ltd.'
     }
 
     void testIndex() {
@@ -109,6 +104,7 @@ class TenantControllerTests {
 
         // test invalid parameters in update
         params.id = tenant.id
+		params.name = ''
         //TODO: add invalid values to params object
 
         controller.update()
