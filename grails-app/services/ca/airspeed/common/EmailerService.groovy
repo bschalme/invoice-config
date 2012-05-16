@@ -4,28 +4,31 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage
 
 class EmailerService {
-	
+
 	boolean transactional = false
-	
-	MailSender mailSender
-	
+
 	def mailService
 
-    def emailInvoice(mail) {
+	def emailInvoice(mail) {
 		mailService.sendMail {
-			to  mail.to
+			multipart true
+			mail.to.each { to it }
 			from mail.from
+			mail.cc.each {
+				cc it
+			}
+			mail.bcc.each {
+				bcc it
+			}
 			subject mail.subject
-			body mail.text
+			if (mail.headers != null) {
+				headers mail.headers
+			}
+			text mail.text
+			if (mail.html != null) {
+				html mail.html
+			}
+			mail.attachments.each { attach it }
 		}
-    }
-	
-	def sendEmail(mail) {
-		SimpleMailMessage message = new SimpleMailMessage()
-		message.to = mail.to
-		message.from = mail.from
-		message.subject = mail.subject
-		message.text = mail.text
-		mailSender.send(message)
 	}
 }

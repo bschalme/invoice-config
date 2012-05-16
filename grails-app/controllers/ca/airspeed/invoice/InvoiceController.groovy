@@ -146,10 +146,33 @@ class InvoiceController {
 			return
 		}
 		Company company = invoiceInstance.job.customer.company
-		def mail = [to: new InternetAddress('bschalme@airspeed.ca', 'Brian Schalme'), 
-			from: new InternetAddress(company.invoiceEmail, company.invoiceFirstName + ' ' + company.invoiceLastName).toString(), 
-			subject: "Test Invoice #${invoiceInstance.invoiceNumber} from ${company.name}", 
-			text: "Hello ${invoiceInstance.job.customer.fullName} from the mail plugin."]
+		def sender = new InternetAddress(company.invoiceEmail, company.invoiceFirstName + ' ' + company.invoiceLastName).toString()
+		def recipients = invoiceInstance.job.invoiceRecipient.findAll {it.type == 'To'}
+		def to = []
+		recipients.each {
+			to << new InternetAddress(it.email, it.firstName + ' ' + it.lastName).toString()
+		}
+		recipients = invoiceInstance.job.invoiceRecipient.findAll {it.type == 'Cc'}
+		def cc = []
+		recipients.each {
+			cc << new InternetAddress(it.email, it.firstName + ' ' + it.lastName).toString()
+		}
+		recipients = invoiceInstance.job.invoiceRecipient.findAll {it.type == 'Bcc'}
+		def bcc = []
+		recipients.each {
+			bcc << new InternetAddress(it.email, it.firstName + ' ' + it.lastName).toString()
+		}
+
+		def mail = [to: to, 
+			from: sender, 
+			cc: cc,
+			bcc: bcc,
+			subject: "Invoice #${invoiceInstance.invoiceNumber} from ${company.name}",
+			headers: ['Disposition-Notification-To': sender], 
+			text: "Hello ${invoiceInstance.job.customer.fullName} from the mail plugin.",
+			html: "<html><head></head><body><p>Hello ${invoiceInstance.job.customer.fullName} from the mail plugin.</p></body></html>",
+			attachments: [new File('./web-app/images/grails_logo.jpg')]]
+		
 		
 		emailerService.emailInvoice(mail)
 		params.deliveryStatus = 'Delivered'

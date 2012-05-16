@@ -4,13 +4,14 @@ package ca.airspeed.invoice
 
 import org.junit.*
 
+import ca.airspeed.common.EmailerService;
 import ca.airspeed.invoice.Invoice;
 import ca.airspeed.invoice.InvoiceController;
 import ca.airspeed.invoice.Job;
 import grails.test.mixin.*
 
 @TestFor(InvoiceController)
-@Mock([Invoice, Job, Customer, Company, Tenant])
+@Mock([Invoice, Job, , InvoiceRecipient, Customer, Company, Tenant])
 class InvoiceControllerTests {
 
 
@@ -32,6 +33,9 @@ class InvoiceControllerTests {
 		def airspeed = new Company(tenant:tenant, name:'Airspeed Consulting', invoiceFirstName:'Brian', invoiceLastName:'Schalme', invoiceEmail:'bschalme@airspeed.ca').save(failOnError: true)
 		def megaCorp = new Customer(company:airspeed, customerRefListId:'334rddd2e234e', fullName:'MegaCorp', defaultDeliveryMethod:'Email').save(failOnError: true)
 		def sonicEsb = new Job(customer:megaCorp, name:'Sonic ESB Integration').save(flush: true, failOnError: true)
+		def toRecipient = new InvoiceRecipient(job: sonicEsb, type: 'To', firstName: 'Joe', lastName: 'Director', email: 'jdirector@megacorp.com').save(failOnError: true)
+		def ccRecipient = new InvoiceRecipient(job: sonicEsb, type: 'Cc', firstName: 'Jane', lastName: 'Vendor', email: 'jvendor@megacorp.com').save(failOnError: true)
+		
 	}
 
 	void testIndex() {
@@ -176,6 +180,27 @@ class InvoiceControllerTests {
 	}
 	
 	void testEmail() {
-		assert controller.email() != null
+		populateValidParams(params)
+		def invoice = new Invoice(params)
+
+		assert invoice.save() != null
+		assert Invoice.count() == 1
+
+		params.id = invoice.id
+		
+		def emailControl = mockFor(EmailerService)
+		emailControl.demand.emailInvoice {Map mail ->
+			assert mail.to[0].toString() == 'Joe Director <jdirector@megacorp.com>'
+			assert mail.from == 'Brian Schalme <bschalme@airspeed.ca>'
+			assert mail.cc[0].toString() == 'Jane Vendor <jvendor@megacorp.com>'
+			assert mail.subject == "Invoice #${invoice.invoiceNumber} from ${invoice.job.customer.company.name}"
+			assert mail.attachments[0].name == 'grails_logo.jpg'
+			return
+		}
+		controller.emailerService = emailControl.createMock()
+		
+		controller.email()
+
+		assert invoice.deliveryStatus == 'Delivered'
 	}
 }

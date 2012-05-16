@@ -11,6 +11,7 @@ import spock.lang.Specification
 import grails.plugin.spock.IntegrationSpec;
 import javax.mail.internet.MimeMessage
 import javax.mail.Message.RecipientType
+import javax.mail.Multipart;
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
@@ -33,21 +34,58 @@ class EmailerServiceSpec extends IntegrationSpec {
 		emailerService != null
 	}
 	
-	def "sends a simple email"() {
+	def "send a text-only email, no Cc, no Bcc"() {
 		when:
 		def mail = [to: ["Brian Schalme <bschalme@airspeed.ca>"]]
 		mail.from = "Darth Vader <dvader@empire.org>"
 		mail.subject = "Your Choice of The Force"
 		mail.text = "Pick one: the Good Side or the Dark Side."
-		emailerService.sendEmail(mail)
+		emailerService.emailInvoice(mail)
+		
+		then:
+		greenMail.receivedMessages.size() == 1
+		MimeMessage message = greenMail.receivedMessages[0]
+		message.getRecipients(RecipientType.TO)[0].toString() == mail.to[0]
+		message.from[0].toString() == mail.from
+		message.getRecipients(RecipientType.CC) == null
+		message.subject == mail.subject
+		message.content instanceof Multipart
+		message.content.count == 1
+		message.content.getBodyPart(0).content.count == 1
+		message.content.getBodyPart(0).content.getBodyPart(0).content == mail.text
+	}
+	
+	def "send a multipart email with Cc, Bcc and attachments"() {
+		when:
+		def mail = [to: ["Brian Schalme <bschalme@airspeed.ca>"]]
+		mail.from = "Darth Vader <dvader@empire.org>"
+		mail.cc = ['Darth Maul <dmaul@empire.org>']
+		mail.bcc = ['Leia Organa <Leia.Organa@rebellion.net>']
+		mail.subject = "Your Choice of The Force"
+		mail.headers = ['Disposition-Notification-To': 'Darth Vader <dvader@empire.org>']
+		mail.text = "Pick one: the Good Side or the Dark Side."
+		mail.html = "<html><head></head><body><p>Hello World!</p></body></html>"
+		mail.attachments = [new File('./web-app/images/grails_logo.jpg')]
+		emailerService.emailInvoice(mail)
 		
 		then:
 		mail != null
-		greenMail.receivedMessages.size() == 1
+		greenMail.receivedMessages.size() == 3
 		MimeMessage message = greenMail.receivedMessages[0]
-		message.getRecipients(RecipientType.TO)[0].toString() == "Brian Schalme <bschalme@airspeed.ca>"
-		message.from[0].toString() == "Darth Vader <dvader@empire.org>"
-		message.subject == "Your Choice of The Force"
-		message.content == "Pick one: the Good Side or the Dark Side." + System.getProperty("line.separator")
+		message.getRecipients(RecipientType.TO)[0].toString() == mail.to[0]
+		message.from[0].toString() == mail.from
+		message.getRecipients(RecipientType.CC) != null
+		message.getRecipients(RecipientType.CC)[0].toString() == mail.cc[0]
+		message.subject == mail.subject
+		message.getHeader("Disposition-Notification-To") != null
+		message.getHeader("Disposition-Notification-To")[0] == 'Darth Vader <dvader@empire.org>'
+		message.content instanceof Multipart
+		message.content.count == 2
+		message.content.getBodyPart(0).content.getBodyPart(0).content.count == 2
+		message.content.getBodyPart(0).content.getBodyPart(0).content.getBodyPart(0).content == mail.text
+		message.content.getBodyPart(0).content.getBodyPart(0).content.getBodyPart(1).content == mail.html
+		def attachment = message.content.getBodyPart(1)
+		attachment.isMimeType('image/jpeg')
+		attachment.contentType == 'image/jpeg; name=grails_logo.jpg'
 	}
 }
