@@ -20,12 +20,16 @@ class Job {
 
     static constraints = {
 			name(blank:false, maxSize:75)
+			emailTemplateHtml(blank:false)
+			emailTemplatePlain(blank:false)
     }
 	
 	static belongsTo = [customer:Customer]
 	static hasMany = [invoice:Invoice, invoiceRecipient:InvoiceRecipient]
 	String name
-	
+	String emailTemplateHtml
+	String emailTemplatePlain
+
 	String toString() {
 		return name
 	}

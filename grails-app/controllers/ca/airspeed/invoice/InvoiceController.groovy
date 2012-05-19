@@ -1,18 +1,14 @@
 /*
-    Copyright 2012 Airspeed Consulting
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
+ Copyright 2012 Airspeed Consulting
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
  */
 package ca.airspeed.invoice
 
@@ -24,7 +20,9 @@ class InvoiceController {
 
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
-	def emailerService
+	// def emailerService
+
+	def mailService
 
 	def index() {
 		redirect(action: "list", params: params)
@@ -164,33 +162,64 @@ class InvoiceController {
 		Company company = invoiceInstance.job.customer.company
 		def sender = new InternetAddress(company.invoiceEmail, company.invoiceFirstName + ' ' + company.invoiceLastName).toString()
 		def recipients = invoiceInstance.job.invoiceRecipient.findAll {it.type == 'To'}
-		def to = []
+		def toRecipients = []
 		recipients.each {
-			to << new InternetAddress(it.email, it.firstName + ' ' + it.lastName).toString()
+			toRecipients << new InternetAddress(it.email, it.firstName + ' ' + it.lastName).toString()
 		}
 		recipients = invoiceInstance.job.invoiceRecipient.findAll {it.type == 'Cc'}
-		def cc = []
+		def ccRecipients = []
 		recipients.each {
-			cc << new InternetAddress(it.email, it.firstName + ' ' + it.lastName).toString()
+			ccRecipients << new InternetAddress(it.email, it.firstName + ' ' + it.lastName).toString()
 		}
 		recipients = invoiceInstance.job.invoiceRecipient.findAll {it.type == 'Bcc'}
-		def bcc = []
+		def bccRecipients = []
 		recipients.each {
-			bcc << new InternetAddress(it.email, it.firstName + ' ' + it.lastName).toString()
+			bccRecipients << new InternetAddress(it.email, it.firstName + ' ' + it.lastName).toString()
 		}
+		def msgHeaders = ["Disposition-Notification-To": sender]
+		def attachmentFiles = [new File('./web-app/images/grails_logo.jpg')]
 
-		def mail = [to: to, 
-			from: sender, 
-			cc: cc,
-			bcc: bcc,
-			subject: "Invoice #${invoiceInstance.invoiceNumber} from ${company.name}",
-			headers: ['Disposition-Notification-To': sender], 
-			text: "Hello ${invoiceInstance.job.customer.fullName} from the mail plugin.",
-			html: "<html><head></head><body><p>Hello ${invoiceInstance.job.customer.fullName} from the mail plugin.</p></body></html>",
-			attachments: [new File('./web-app/images/grails_logo.jpg')]]
-		
-		
-		emailerService.emailInvoice(mail)
+		/*def mail = [to: to, 
+		 from: sender, 
+		 cc: cc,
+		 bcc: bcc,
+		 subject: "Invoice #${invoiceInstance.invoiceNumber} from ${company.name}",
+		 headers: ['Disposition-Notification-To': sender], 
+		 text: "Hello ${invoiceInstance.job.customer.fullName} from the mail plugin.",
+		 html: "<html><head></head><body><p>Hello ${invoiceInstance.job.customer.fullName} from the mail plugin.</p></body></html>",
+		 attachments: [new File('./web-app/images/grails_logo.jpg')]]*/
+
+		sendMail {
+		 multipart true
+		 to toRecipients
+		 from sender
+		 if (ccRecipients) {
+			 cc ccRecipients
+		 }
+		 if (bccRecipients) {
+			 bcc bccRecipients
+		 }
+		 subject "Invoice #${invoiceInstance.invoiceNumber} from ${company.name}"
+		 headers msgHeaders
+		 // text "Hello ${invoiceInstance.job.customer.fullName} from the mail plugin."
+		 /*text( view:"${invoiceInstance.job.emailTemplatePlain}",
+			 model:[invoiceInstance:invoiceInstance])*/
+		 text g.render(template: "${invoiceInstance.job.emailTemplatePlain}")
+		 html "<html><head></head><body><p>Hello ${invoiceInstance.job.customer.fullName} from the mail plugin.</p></body></html>"
+		 attach attachmentFiles
+		 }
+
+		/*sendMail {
+			multipart true
+			to "Brian Schalme <bschalme@airspeed.ca>"
+			from sender
+			subject "Hello Fred"
+			body 'How are you?'
+		}*/
+
+
+
+		//emailerService.emailInvoice(mail)
 		params.deliveryStatus = 'Delivered'
 		myUpdate('emailed.message')
 	}

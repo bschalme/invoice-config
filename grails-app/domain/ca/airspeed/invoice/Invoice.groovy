@@ -23,8 +23,8 @@ class Invoice {
 		invoiceNumber(blank:false)
 		deliveryStatus(blank:false, inList:["ToBeDelivered", "Delivered", "Pending"])
 		deliveryMethod(blank:false, inList:["Email", "WebService"])
-		emailTemplateHtml()
-		emailTemplatePlain(blank:false)
+		emailTemplateHtml(blank:true, nullable: true)
+		emailTemplatePlain(blank:true, nullable: true)
     }
 	
 	static belongsTo = [job:Job]
