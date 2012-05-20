@@ -204,7 +204,7 @@ class InvoiceController {
 		 // text "Hello ${invoiceInstance.job.customer.fullName} from the mail plugin."
 		 /*text( view:"${invoiceInstance.job.emailTemplatePlain}",
 			 model:[invoiceInstance:invoiceInstance])*/
-		 text g.render(template: "${invoiceInstance.job.emailTemplatePlain}")
+		 text g.render(template: "${invoiceInstance.job.emailTemplatePlain}", model: [invoiceInstance:invoiceInstance])
 		 html "<html><head></head><body><p>Hello ${invoiceInstance.job.customer.fullName} from the mail plugin.</p></body></html>"
 		 attach attachmentFiles
 		 }

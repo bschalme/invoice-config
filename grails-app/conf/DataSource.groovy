@@ -16,14 +16,6 @@ environments {
             dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
             url = "jdbc:h2:mem:devDb;MVCC=TRUE"
         }
-		dataSource_openSync {
-			dialect = org.hibernate.dialect.MySQLInnoDBDialect
-			driverClassName = 'com.mysql.jdbc.Driver'
-			username = 'test-qb-airspeed'
-			password = 'test-qb-airspeed'
-			url = 'jdbc:mysql://localhost/test_qbairspeed'
-			// dbCreate = 'validate'
-		}
     }
     test {
         dataSource {
