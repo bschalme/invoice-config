@@ -25,6 +25,7 @@ class Invoice {
 		deliveryMethod(blank:false, inList:["Email", "WebService"])
 		emailTemplateHtml(blank:true, nullable: true)
 		emailTemplatePlain(blank:true, nullable: true)
+		other(blank:true, nullable: true, maxSize: 30)
     }
 	
 	static belongsTo = [job:Job]
@@ -35,6 +36,7 @@ class Invoice {
 	String deliveryStatus
 	String emailTemplateHtml
 	String emailTemplatePlain
+	String other
 	
 	String toString() {
 		return invoiceNumber

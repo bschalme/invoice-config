@@ -20,7 +20,7 @@ class InvoiceController {
 
 	static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
-	// def emailerService
+	def emailerService
 
 	def mailService
 
@@ -159,67 +159,8 @@ class InvoiceController {
 			redirect(action: "list")
 			return
 		}
-		Company company = invoiceInstance.job.customer.company
-		def sender = new InternetAddress(company.invoiceEmail, company.invoiceFirstName + ' ' + company.invoiceLastName).toString()
-		def recipients = invoiceInstance.job.invoiceRecipient.findAll {it.type == 'To'}
-		def toRecipients = []
-		recipients.each {
-			toRecipients << new InternetAddress(it.email, it.firstName + ' ' + it.lastName).toString()
-		}
-		recipients = invoiceInstance.job.invoiceRecipient.findAll {it.type == 'Cc'}
-		def ccRecipients = []
-		recipients.each {
-			ccRecipients << new InternetAddress(it.email, it.firstName + ' ' + it.lastName).toString()
-		}
-		recipients = invoiceInstance.job.invoiceRecipient.findAll {it.type == 'Bcc'}
-		def bccRecipients = []
-		recipients.each {
-			bccRecipients << new InternetAddress(it.email, it.firstName + ' ' + it.lastName).toString()
-		}
-		def msgHeaders = ["Disposition-Notification-To": sender]
-		def attachmentFiles = [new File('./web-app/images/grails_logo.jpg')]
-
-		/*def mail = [to: to, 
-		 from: sender, 
-		 cc: cc,
-		 bcc: bcc,
-		 subject: "Invoice #${invoiceInstance.invoiceNumber} from ${company.name}",
-		 headers: ['Disposition-Notification-To': sender], 
-		 text: "Hello ${invoiceInstance.job.customer.fullName} from the mail plugin.",
-		 html: "<html><head></head><body><p>Hello ${invoiceInstance.job.customer.fullName} from the mail plugin.</p></body></html>",
-		 attachments: [new File('./web-app/images/grails_logo.jpg')]]*/
-
-		sendMail {
-		 multipart true
-		 to toRecipients
-		 from sender
-		 if (ccRecipients) {
-			 cc ccRecipients
-		 }
-		 if (bccRecipients) {
-			 bcc bccRecipients
-		 }
-		 subject "Invoice #${invoiceInstance.invoiceNumber} from ${company.name}"
-		 headers msgHeaders
-		 // text "Hello ${invoiceInstance.job.customer.fullName} from the mail plugin."
-		 /*text( view:"${invoiceInstance.job.emailTemplatePlain}",
-			 model:[invoiceInstance:invoiceInstance])*/
-		 text g.render(template: "${invoiceInstance.job.emailTemplatePlain}", model: [invoiceInstance:invoiceInstance])
-		 html "<html><head></head><body><p>Hello ${invoiceInstance.job.customer.fullName} from the mail plugin.</p></body></html>"
-		 attach attachmentFiles
-		 }
-
-		/*sendMail {
-			multipart true
-			to "Brian Schalme <bschalme@airspeed.ca>"
-			from sender
-			subject "Hello Fred"
-			body 'How are you?'
-		}*/
-
-
-
-		//emailerService.emailInvoice(mail)
+		
+		emailerService.emailInvoice(invoiceInstance)
 		params.deliveryStatus = 'Delivered'
 		myUpdate('emailed.message')
 	}

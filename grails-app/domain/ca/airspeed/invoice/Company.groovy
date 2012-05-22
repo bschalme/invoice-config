@@ -21,6 +21,12 @@ class Company {
 
     static constraints = {
 		name(blank:false, maxSize:50)
+		address1(blank: false, maxSize:25)
+		address2(blank: true, nullable:true, maxSize:25)
+		city(blank:false, maxSize:25)
+		province(blank:false, maxSixe:2)
+		phone(blank: false, maxSize:30)
+		url(blank:true, nullable: true, url:true)
 		invoiceFirstName(blank:false, maxSize:25)
 		invoiceLastName(blank:true, maxSize:25)
 		invoiceEmail(blank:false, email:true)
@@ -30,6 +36,13 @@ class Company {
 	
 	static hasMany = [customer:Customer]
 	String name
+	String address1
+	String address2
+	String city
+	String province
+	String postalCode
+	String phone
+	String url
 	String invoiceFirstName
 	String invoiceLastName
 	String invoiceEmail

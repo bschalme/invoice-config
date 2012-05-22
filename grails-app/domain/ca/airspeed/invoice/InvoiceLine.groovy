@@ -26,9 +26,15 @@ class InvoiceLine {
 		amount(min: 0F, max: 9999999.9F, scale: 2)
     }
 	
+	static belongsTo = [invoice:Invoice]
+	
 	Float quantity
 	String itemName
 	String description
 	Float rate
 	Float amount 
+	
+	String toString() {
+		return description
+	}
 }
