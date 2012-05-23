@@ -18,7 +18,6 @@ import javax.mail.internet.InternetAddress;
 
 import ca.airspeed.invoice.Customer;
 import ca.airspeed.invoice.Company;
-import ca.airspeed.invoice.Tenant;
 import ca.airspeed.invoice.Job;
 import ca.airspeed.invoice.Invoice;
 import ca.airspeed.invoice.InvoiceLine;

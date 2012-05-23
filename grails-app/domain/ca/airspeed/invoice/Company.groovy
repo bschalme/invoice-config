@@ -32,8 +32,6 @@ class Company {
 		invoiceEmail(blank:false, email:true)
     }
 	
-	static belongsTo = [tenant: Tenant]
-	
 	static hasMany = [customer:Customer]
 	String name
 	String address1

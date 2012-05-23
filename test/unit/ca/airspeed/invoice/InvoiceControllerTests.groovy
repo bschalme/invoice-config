@@ -27,7 +27,7 @@ import ca.airspeed.invoice.Job;
 import grails.test.mixin.*
 
 @TestFor(InvoiceController)
-@Mock([Invoice, Job, , InvoiceRecipient, Customer, Company, Tenant])
+@Mock([Invoice, Job, InvoiceRecipient, Customer, Company])
 class InvoiceControllerTests {
 
 
@@ -45,8 +45,7 @@ class InvoiceControllerTests {
 	}
 
 	void seedDb() {
-		def tenant = new Tenant(name:'4020774 Manitoba Ltd.').save(failOnError: true)
-		def airspeed = new Company(tenant:tenant, name:'TEST Airspeed Consulting', address1:'25 Somewhere Ave.', city:'Winnipeg', province:'MB', postalCode:'R2M 0Y6', phone:'+1 (123) 555-1212', url:'http://www.airspeed.ca', invoiceFirstName:'Brian', invoiceLastName:'Schalme', invoiceEmail:'bschalme@airspeed.ca').save(failOnError: true)
+		def airspeed = new Company(name:'TEST Airspeed Consulting', address1:'25 Somewhere Ave.', city:'Winnipeg', province:'MB', postalCode:'R2M 0Y6', phone:'+1 (123) 555-1212', url:'http://www.airspeed.ca', invoiceFirstName:'Brian', invoiceLastName:'Schalme', invoiceEmail:'bschalme@airspeed.ca').save(failOnError: true)
 		def megaCorp = new Customer(company:airspeed, customerRefListId:'334rddd2e234e', fullName:'MegaCorp', defaultDeliveryMethod:'Email').save(failOnError: true)
 		def sonicEsb = new Job(customer:megaCorp, name:'Sonic ESB Integration', emailTemplatePlain:'/templates/MegaCorp/MegaCorpPlain', emailTemplateHtml:'/templates/MegaCorp/MegaCorpHtml').save(failOnError: true)
 		def toRecipient = new InvoiceRecipient(job: sonicEsb, type: 'To', firstName: 'Joe', lastName: 'Director', email: 'jdirector@megacorp.com').save(failOnError: true)

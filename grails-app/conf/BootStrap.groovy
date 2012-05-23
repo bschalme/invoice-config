@@ -4,7 +4,6 @@ import ca.airspeed.invoice.Invoice
 import ca.airspeed.invoice.InvoiceLine;
 import ca.airspeed.invoice.InvoiceRecipient
 import ca.airspeed.invoice.Job
-import ca.airspeed.invoice.Tenant;
 
 class BootStrap {
 
@@ -12,8 +11,7 @@ class BootStrap {
 		environments {
 			development {
 				if (!Tenant.count()) {
-					def tenant = new Tenant(name:'4020774 Manitoba Ltd.').save(failOnError: true)
-					def airspeed = new Company(tenant:tenant, name:'TEST Airspeed Consulting', address1:'25 Somewhere Ave.', city:'Winnipeg', province:'MB', postalCode:'R2M 0Y6', phone:'+1 (123) 555-1212', url:'http://www.airspeed.ca', invoiceFirstName:'Brian', invoiceLastName:'Schalme', invoiceEmail:'bschalme@airspeed.ca').save(failOnError: true)
+					def airspeed = new Company(name:'TEST Airspeed Consulting', address1:'25 Somewhere Ave.', city:'Winnipeg', province:'MB', postalCode:'R2M 0Y6', phone:'+1 (123) 555-1212', url:'http://www.airspeed.ca', invoiceFirstName:'Brian', invoiceLastName:'Schalme', invoiceEmail:'bschalme@airspeed.ca').save(failOnError: true)
 					def megaCorp = new Customer(company:airspeed, customerRefListId:'334rddd2e234e', fullName:'MegaCorp', defaultDeliveryMethod:'Email').save(failOnError: true)
 					def sonicEsb = new Job(customer:megaCorp, name:'Sonic ESB Integration', emailTemplatePlain:'/templates/MegaCorp/MegaCorpPlain', emailTemplateHtml:'/templates/MegaCorp/MegaCorpHtml').save(failOnError: true)
 					def inv362 = new Invoice(job:sonicEsb, invoiceNumber:'362', deliveryMethod:'Email', deliveryStatus:'ToBeDelivered', other:'Mar 1 - 31, 2012').save(failOnError: true, flush:true)
