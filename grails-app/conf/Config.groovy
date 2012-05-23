@@ -9,6 +9,8 @@
 // if (System.properties["${appName}.config.location"]) {
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
+grails.config.locations = [ "file:app-${appName}-quartz.groovy"]
+
 
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
@@ -79,12 +81,13 @@ environments {
 
 // log4j configuration
 log4j = {
-    // Example of changing the log pattern for the default console
-    // appender:
-    //
-    //appenders {
-    //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
-    //}
+	root { error() }
+    
+	appenders {
+        console name:'stdout', layout:pattern(conversionPattern: '%d{ISO8601} %p %c{1}: %m%n')
+    }
+	
+	info   'grails.app.jobs.ca.airspeed.invoice'
 
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
            'org.codehaus.groovy.grails.web.pages', //  GSP
