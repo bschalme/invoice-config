@@ -24,7 +24,7 @@ class Company {
 		address1(blank: false, maxSize:25)
 		address2(blank: true, nullable:true, maxSize:25)
 		city(blank:false, maxSize:25)
-		province(blank:false, maxSixe:2)
+		province(blank:false, maxSize:2)
 		phone(blank: false, maxSize:30)
 		url(blank:true, nullable: true, url:true)
 		invoiceFirstName(blank:false, maxSize:25)

@@ -29,7 +29,34 @@ import ca.airspeed.invoice.Company;
 @TestFor(Company)
 class CompanyTests {
 
-    void testSomething() {
-       fail "Implement me"
+    void testConstraints() {
+       mockForConstraintsTests(Company)
+	   
+	   def company = new Company()
+	   assert !company.validate()
+	   assert "nullable" == company.errors["name"]
+	   assert "nullable" == company.errors["address1"]
+	   assert "nullable" == company.errors["city"]
+	   assert "nullable" == company.errors["province"]
+	   assert "nullable" == company.errors["phone"]
+	   assert "nullable" == company.errors["invoiceFirstName"]
+	   assert "nullable" == company.errors["invoiceEmail"]
+	   
+	   company = new Company(name:'TEST Airspeed Consulting', 
+		   address1:'25 Somewhere Ave.', 
+		   city:'Winnipeg', province:'BlahBlah', 
+		   postalCode:'R2M 0Y6', phone:'+1 (123) 555-1212', 
+		   url:'http://www.airspeed.ca', invoiceFirstName:'Brian', 
+		   invoiceLastName:'Schalme', invoiceEmail:'bschalme@airspeed.ca')
+	   assert !company.validate()
+	   assert "maxSize" == company.errors["province"]
+	   company.province = 'MB'
+	   
+	   company.url = 'www.domain.com'
+	   assert !company.validate()
+	   assert "url" == company.errors["url"]
+	   
+	   company.url = 'http://www.domain.com'
+	   assert company.validate()
     }
 }

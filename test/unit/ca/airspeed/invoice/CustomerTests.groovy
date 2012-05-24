@@ -29,7 +29,23 @@ import ca.airspeed.invoice.Customer;
 @TestFor(Customer)
 class CustomerTests {
 
-    void testSomething() {
-       fail "Implement me"
+    void testConstraints() {
+       mockForConstraintsTests(Customer)
+	   
+	   def customer = new Customer()
+	   assert !customer.validate()
+	   assert "nullable" == customer.errors["fullName"]
+	   assert "nullable" == customer.errors["defaultDeliveryMethod"]
+	   assert "nullable" == customer.errors["customerRefListId"]
+	   
+	   customer.fullName = 'MegaCorp'
+	   customer.defaultDeliveryMethod = 'NoSuchMethod'
+	   customer.customerRefListId = '33hh774'
+	   customer.company = new Company()
+	   assert !customer.validate()
+	   assert "inList" == customer.errors["defaultDeliveryMethod"]
+	   
+	   customer.defaultDeliveryMethod = 'Email'
+	   assert customer.validate()
     }
 }

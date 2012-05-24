@@ -29,150 +29,158 @@ import grails.test.mixin.*
 class CompanyControllerTests {
 
 
-    def populateValidParams(params) {
-      assert params != null
-      // TODO: Populate valid properties like...
-      //params["name"] = 'someValidName'
-    }
+	def populateValidParams(params) {
+		assert params != null
+		params["name"] = 'TEST Airspeed Consulting'
+		params["address1"] = '25 Somewhere Ave.'
+		params["city"] = 'Winnipeg'
+		params["province"] = 'MB'
+		params["postalCode"] = 'R2M 0Y6'
+		params["phone"] = '+1 (123) 555-1212'
+		params["url"] = 'http://www.airspeed.ca'
+		params["invoiceFirstName"] = 'Brian'
+		params["invoiceLastName"] = 'Schalme'
+		params["invoiceEmail"] = 'bschalme@airspeed.ca'
+	}
 
-    void testIndex() {
-        controller.index()
-        assert "/company/list" == response.redirectedUrl
-    }
+	void testIndex() {
+		controller.index()
+		assert "/company/list" == response.redirectedUrl
+	}
 
-    void testList() {
+	void testList() {
 
-        def model = controller.list()
+		def model = controller.list()
 
-        assert model.companyInstanceList.size() == 0
-        assert model.companyInstanceTotal == 0
-    }
+		assert model.companyInstanceList.size() == 0
+		assert model.companyInstanceTotal == 0
+	}
 
-    void testCreate() {
-       def model = controller.create()
+	void testCreate() {
+		def model = controller.create()
 
-       assert model.companyInstance != null
-    }
+		assert model.companyInstance != null
+	}
 
-    void testSave() {
-        controller.save()
+	void testSave() {
+		controller.save()
 
-        assert model.companyInstance != null
-        assert view == '/company/create'
+		assert model.companyInstance != null
+		assert view == '/company/create'
 
-        response.reset()
+		response.reset()
 
-        populateValidParams(params)
-        controller.save()
+		populateValidParams(params)
+		controller.save()
 
-        assert response.redirectedUrl == '/company/show/1'
-        assert controller.flash.message != null
-        assert Company.count() == 1
-    }
+		assert response.redirectedUrl == '/company/show/1'
+		assert controller.flash.message != null
+		assert Company.count() == 1
+	}
 
-    void testShow() {
-        controller.show()
+	void testShow() {
+		controller.show()
 
-        assert flash.message != null
-        assert response.redirectedUrl == '/company/list'
-
-
-        populateValidParams(params)
-        def company = new Company(params)
-
-        assert company.save() != null
-
-        params.id = company.id
-
-        def model = controller.show()
-
-        assert model.companyInstance == company
-    }
-
-    void testEdit() {
-        controller.edit()
-
-        assert flash.message != null
-        assert response.redirectedUrl == '/company/list'
+		assert flash.message != null
+		assert response.redirectedUrl == '/company/list'
 
 
-        populateValidParams(params)
-        def company = new Company(params)
+		populateValidParams(params)
+		def company = new Company(params)
 
-        assert company.save() != null
+		assert company.save() != null
 
-        params.id = company.id
+		params.id = company.id
 
-        def model = controller.edit()
+		def model = controller.show()
 
-        assert model.companyInstance == company
-    }
+		assert model.companyInstance == company
+	}
 
-    void testUpdate() {
-        controller.update()
+	void testEdit() {
+		controller.edit()
 
-        assert flash.message != null
-        assert response.redirectedUrl == '/company/list'
-
-        response.reset()
+		assert flash.message != null
+		assert response.redirectedUrl == '/company/list'
 
 
-        populateValidParams(params)
-        def company = new Company(params)
+		populateValidParams(params)
+		def company = new Company(params)
 
-        assert company.save() != null
+		assert company.save() != null
 
-        // test invalid parameters in update
-        params.id = company.id
-        //TODO: add invalid values to params object
+		params.id = company.id
 
-        controller.update()
+		def model = controller.edit()
 
-        assert view == "/company/edit"
-        assert model.companyInstance != null
+		assert model.companyInstance == company
+	}
 
-        company.clearErrors()
+	void testUpdate() {
+		controller.update()
 
-        populateValidParams(params)
-        controller.update()
+		assert flash.message != null
+		assert response.redirectedUrl == '/company/list'
 
-        assert response.redirectedUrl == "/company/show/$company.id"
-        assert flash.message != null
+		response.reset()
 
-        //test outdated version number
-        response.reset()
-        company.clearErrors()
 
-        populateValidParams(params)
-        params.id = company.id
-        params.version = -1
-        controller.update()
+		populateValidParams(params)
+		def company = new Company(params)
 
-        assert view == "/company/edit"
-        assert model.companyInstance != null
-        assert model.companyInstance.errors.getFieldError('version')
-        assert flash.message != null
-    }
+		assert company.save() != null
 
-    void testDelete() {
-        controller.delete()
-        assert flash.message != null
-        assert response.redirectedUrl == '/company/list'
+		// test invalid parameters in update
+		params.id = company.id
+		params.name = ''
 
-        response.reset()
+		controller.update()
 
-        populateValidParams(params)
-        def company = new Company(params)
+		assert view == "/company/edit"
+		assert model.companyInstance != null
 
-        assert company.save() != null
-        assert Company.count() == 1
+		company.clearErrors()
 
-        params.id = company.id
+		populateValidParams(params)
+		controller.update()
 
-        controller.delete()
+		assert response.redirectedUrl == "/company/show/$company.id"
+		assert flash.message != null
 
-        assert Company.count() == 0
-        assert Company.get(company.id) == null
-        assert response.redirectedUrl == '/company/list'
-    }
+		//test outdated version number
+		response.reset()
+		company.clearErrors()
+
+		populateValidParams(params)
+		params.id = company.id
+		params.version = -1
+		controller.update()
+
+		assert view == "/company/edit"
+		assert model.companyInstance != null
+		assert model.companyInstance.errors.getFieldError('version')
+		assert flash.message != null
+	}
+
+	void testDelete() {
+		controller.delete()
+		assert flash.message != null
+		assert response.redirectedUrl == '/company/list'
+
+		response.reset()
+
+		populateValidParams(params)
+		def company = new Company(params)
+
+		assert company.save() != null
+		assert Company.count() == 1
+
+		params.id = company.id
+
+		controller.delete()
+
+		assert Company.count() == 0
+		assert Company.get(company.id) == null
+		assert response.redirectedUrl == '/company/list'
+	}
 }

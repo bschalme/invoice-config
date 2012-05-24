@@ -20,7 +20,7 @@ package ca.airspeed.invoice
 class Customer {
 
     static constraints = {
-		fullName()
+		fullName(blank: false)
 		defaultDeliveryMethod(blank:false, inList:["Email", "WebService"])
     }
 	

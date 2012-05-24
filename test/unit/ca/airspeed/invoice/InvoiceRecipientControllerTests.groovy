@@ -22,154 +22,167 @@ import org.junit.*
 import grails.test.mixin.*
 
 @TestFor(InvoiceRecipientController)
-@Mock(InvoiceRecipient)
+@Mock([InvoiceRecipient, Job, Customer, Company])
 class InvoiceRecipientControllerTests {
 
 
-    def populateValidParams(params) {
-      assert params != null
-      // TODO: Populate valid properties like...
-      //params["name"] = 'someValidName'
-    }
+	def populateValidParams(params) {
+		assert params != null
+		params["type"] = 'To'
+		params["firstName"] = 'Some'
+		params["lastName"] = 'Body'
+		params["email"] = 'some.body@domain.com'
+		def airspeed = new Company(name:'TEST Airspeed Consulting',
+				address1:'25 Somewhere Ave.', city:'Winnipeg', province:'MB',
+				postalCode:'R2M 0Y6', phone:'+1 (123) 555-1212', url:'http://www.airspeed.ca',
+				invoiceFirstName:'Brian', invoiceLastName:'Schalme',
+				invoiceEmail:'bschalme@airspeed.ca').save(failOnError: true)
+		def megaCorp = new Customer(company:airspeed, customerRefListId:'334rddd2e234e',
+				fullName:'MegaCorp', defaultDeliveryMethod:'Email').save(failOnError: true)
+		def sonicEsb = new Job(customer:megaCorp, name:'Sonic ESB Integration',
+				emailTemplatePlain:'/templates/MegaCorp/MegaCorpPlain',
+				emailTemplateHtml:'/templates/MegaCorp/MegaCorpHtml').save(failOnError: true)
+		params["job.id"] = Job.findByName('Sonic ESB Integration').id
+	}
 
-    void testIndex() {
-        controller.index()
-        assert "/invoiceRecipient/list" == response.redirectedUrl
-    }
+	void testIndex() {
+		controller.index()
+		assert "/invoiceRecipient/list" == response.redirectedUrl
+	}
 
-    void testList() {
+	void testList() {
 
-        def model = controller.list()
+		def model = controller.list()
 
-        assert model.invoiceRecipientInstanceList.size() == 0
-        assert model.invoiceRecipientInstanceTotal == 0
-    }
+		assert model.invoiceRecipientInstanceList.size() == 0
+		assert model.invoiceRecipientInstanceTotal == 0
+	}
 
-    void testCreate() {
-       def model = controller.create()
+	void testCreate() {
+		def model = controller.create()
 
-       assert model.invoiceRecipientInstance != null
-    }
+		assert model.invoiceRecipientInstance != null
+	}
 
-    void testSave() {
-        controller.save()
+	void testSave() {
+		controller.save()
 
-        assert model.invoiceRecipientInstance != null
-        assert view == '/invoiceRecipient/create'
+		assert model.invoiceRecipientInstance != null
+		assert view == '/invoiceRecipient/create'
 
-        response.reset()
+		response.reset()
 
-        populateValidParams(params)
-        controller.save()
+		populateValidParams(params)
+		controller.save()
 
-        assert response.redirectedUrl == '/invoiceRecipient/show/1'
-        assert controller.flash.message != null
-        assert InvoiceRecipient.count() == 1
-    }
+		assert response.redirectedUrl == '/invoiceRecipient/show/1'
+		assert controller.flash.message != null
+		assert InvoiceRecipient.count() == 1
+	}
 
-    void testShow() {
-        controller.show()
+	void testShow() {
+		controller.show()
 
-        assert flash.message != null
-        assert response.redirectedUrl == '/invoiceRecipient/list'
-
-
-        populateValidParams(params)
-        def invoiceRecipient = new InvoiceRecipient(params)
-
-        assert invoiceRecipient.save() != null
-
-        params.id = invoiceRecipient.id
-
-        def model = controller.show()
-
-        assert model.invoiceRecipientInstance == invoiceRecipient
-    }
-
-    void testEdit() {
-        controller.edit()
-
-        assert flash.message != null
-        assert response.redirectedUrl == '/invoiceRecipient/list'
+		assert flash.message != null
+		assert response.redirectedUrl == '/invoiceRecipient/list'
 
 
-        populateValidParams(params)
-        def invoiceRecipient = new InvoiceRecipient(params)
+		populateValidParams(params)
+		def invoiceRecipient = new InvoiceRecipient(params)
 
-        assert invoiceRecipient.save() != null
+		assert invoiceRecipient.save() != null
 
-        params.id = invoiceRecipient.id
+		params.id = invoiceRecipient.id
 
-        def model = controller.edit()
+		def model = controller.show()
 
-        assert model.invoiceRecipientInstance == invoiceRecipient
-    }
+		assert model.invoiceRecipientInstance == invoiceRecipient
+	}
 
-    void testUpdate() {
-        controller.update()
+	void testEdit() {
+		controller.edit()
 
-        assert flash.message != null
-        assert response.redirectedUrl == '/invoiceRecipient/list'
-
-        response.reset()
+		assert flash.message != null
+		assert response.redirectedUrl == '/invoiceRecipient/list'
 
 
-        populateValidParams(params)
-        def invoiceRecipient = new InvoiceRecipient(params)
+		populateValidParams(params)
+		def invoiceRecipient = new InvoiceRecipient(params)
 
-        assert invoiceRecipient.save() != null
+		assert invoiceRecipient.save() != null
 
-        // test invalid parameters in update
-        params.id = invoiceRecipient.id
-        //TODO: add invalid values to params object
+		params.id = invoiceRecipient.id
 
-        controller.update()
+		def model = controller.edit()
 
-        assert view == "/invoiceRecipient/edit"
-        assert model.invoiceRecipientInstance != null
+		assert model.invoiceRecipientInstance == invoiceRecipient
+	}
 
-        invoiceRecipient.clearErrors()
+	void testUpdate() {
+		controller.update()
 
-        populateValidParams(params)
-        controller.update()
+		assert flash.message != null
+		assert response.redirectedUrl == '/invoiceRecipient/list'
 
-        assert response.redirectedUrl == "/invoiceRecipient/show/$invoiceRecipient.id"
-        assert flash.message != null
+		response.reset()
 
-        //test outdated version number
-        response.reset()
-        invoiceRecipient.clearErrors()
 
-        populateValidParams(params)
-        params.id = invoiceRecipient.id
-        params.version = -1
-        controller.update()
+		populateValidParams(params)
+		def invoiceRecipient = new InvoiceRecipient(params)
 
-        assert view == "/invoiceRecipient/edit"
-        assert model.invoiceRecipientInstance != null
-        assert model.invoiceRecipientInstance.errors.getFieldError('version')
-        assert flash.message != null
-    }
+		assert invoiceRecipient.save() != null
 
-    void testDelete() {
-        controller.delete()
-        assert flash.message != null
-        assert response.redirectedUrl == '/invoiceRecipient/list'
+		// test invalid parameters in update
+		params.id = invoiceRecipient.id
+		params.type = 'XX'
 
-        response.reset()
+		controller.update()
 
-        populateValidParams(params)
-        def invoiceRecipient = new InvoiceRecipient(params)
+		assert view == "/invoiceRecipient/edit"
+		assert model.invoiceRecipientInstance != null
 
-        assert invoiceRecipient.save() != null
-        assert InvoiceRecipient.count() == 1
+		invoiceRecipient.clearErrors()
 
-        params.id = invoiceRecipient.id
+		populateValidParams(params)
+		controller.update()
 
-        controller.delete()
+		assert response.redirectedUrl == "/invoiceRecipient/show/$invoiceRecipient.id"
+		assert flash.message != null
 
-        assert InvoiceRecipient.count() == 0
-        assert InvoiceRecipient.get(invoiceRecipient.id) == null
-        assert response.redirectedUrl == '/invoiceRecipient/list'
-    }
+		//test outdated version number
+		response.reset()
+		invoiceRecipient.clearErrors()
+
+		populateValidParams(params)
+		params.id = invoiceRecipient.id
+		params.version = -1
+		controller.update()
+
+		assert view == "/invoiceRecipient/edit"
+		assert model.invoiceRecipientInstance != null
+		assert model.invoiceRecipientInstance.errors.getFieldError('version')
+		assert flash.message != null
+	}
+
+	void testDelete() {
+		controller.delete()
+		assert flash.message != null
+		assert response.redirectedUrl == '/invoiceRecipient/list'
+
+		response.reset()
+
+		populateValidParams(params)
+		def invoiceRecipient = new InvoiceRecipient(params)
+
+		assert invoiceRecipient.save() != null
+		assert InvoiceRecipient.count() == 1
+
+		params.id = invoiceRecipient.id
+
+		controller.delete()
+
+		assert InvoiceRecipient.count() == 0
+		assert InvoiceRecipient.get(invoiceRecipient.id) == null
+		assert response.redirectedUrl == '/invoiceRecipient/list'
+	}
 }

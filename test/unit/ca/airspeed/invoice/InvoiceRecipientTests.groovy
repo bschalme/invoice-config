@@ -25,9 +25,26 @@ import org.junit.*
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
 @TestFor(InvoiceRecipient)
+@Mock(Job)
 class InvoiceRecipientTests {
 
-    void testSomething() {
-       fail "Implement me"
+    void testConstraints() {
+		mockForConstraintsTests(Job)
+		
+		def job = new Job()
+		assert !job.validate()
+		assert "nullable" == job.errors["name"] 
+		assert "nullable" == job.errors["emailTemplateHtml"]
+		assert "nullable" == job.errors["emailTemplatePlain"]
+		
+		job.emailTemplateHtml = '/templates/html.gsp'
+		job.emailTemplatePlain = '/templates/plain.gsp'
+		job.customer = new Customer()
+		job.name = 'SomeBigHairyLongFrickinNameThat Is LongerThanThe 75 Character Limit Set Fot This Field'
+		assert !job.validate()
+		assert "maxSize" == job.errors["name"]
+		
+		job.name = 'Jane Doe'
+		assert job.validate()
     }
 }

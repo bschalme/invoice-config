@@ -39,7 +39,7 @@ class InvoiceTests {
 		invoice.job = new Job()
 		assert invoice.validate() != null
 		if (invoice.errors.fieldErrorCount > 0) {
-			println invoice.errors
+			log.error invoice.errors
 		}
 	}
 }

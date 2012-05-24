@@ -22,14 +22,19 @@ import org.junit.*
 import grails.test.mixin.*
 
 @TestFor(JobController)
-@Mock(Job)
+@Mock([Job, Customer, Company])
 class JobControllerTests {
 
 
     def populateValidParams(params) {
       assert params != null
-      // TODO: Populate valid properties like...
-      //params["name"] = 'someValidName'
+      params["name"] = 'Replace Roof Shingles'
+	  params["emailTemplateHtml"] = '/templates/html.gsp'
+	  params["emailTemplatePlain"] = '/templates/plain.gsp'
+	  def airspeed = new Company(name:'TEST Airspeed Consulting', address1:'25 Somewhere Ave.', city:'Winnipeg', province:'MB', postalCode:'R2M 0Y6', phone:'+1 (123) 555-1212', url:'http://www.airspeed.ca', invoiceFirstName:'Brian', invoiceLastName:'Schalme', invoiceEmail:'bschalme@airspeed.ca').save(failOnError: true)
+	  def megaCorp = new Customer(company:airspeed, customerRefListId:'334rddd2e234e', fullName:'MegaCorp', defaultDeliveryMethod:'Email').save(failOnError: true)
+	  params["customer.id"] = Customer.findByFullName('MegaCorp').id
+	  
     }
 
     void testIndex() {
@@ -121,7 +126,7 @@ class JobControllerTests {
 
         // test invalid parameters in update
         params.id = job.id
-        //TODO: add invalid values to params object
+        params.emailTemplateHtml = ''
 
         controller.update()
 
