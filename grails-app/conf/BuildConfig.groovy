@@ -49,5 +49,9 @@ grails.project.dependency.resolution = {
         build ":tomcat:$grailsVersion"
 		
 		test ":spock:0.6"
+		
+		compile ":jquery-ui:1.8.15"
+		compile ":modernizr:2.0.6"
+		compile ":uploadr:0.5.9"
     }
 }

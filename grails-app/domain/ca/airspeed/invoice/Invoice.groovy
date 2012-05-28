@@ -30,7 +30,7 @@ class Invoice {
 	
 	static belongsTo = [job:Job]
 	
-	static hasMany = [invoiceLine:InvoiceLine]
+	static hasMany = [invoiceLine:InvoiceLine, attachments: Attachment]
 	String invoiceNumber
 	String deliveryMethod
 	String deliveryStatus
