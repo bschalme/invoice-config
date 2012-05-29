@@ -19,9 +19,12 @@ package ca.airspeed.invoice
 class Attachment {
 
     static constraints = {
+		content(maxSize: 1024 * 1024 * 2) // 2MB
 		fileName(blank: false)
 		mimeType(inList:["application/pdf", "application/msword"])
     }
+	
+	static belongsTo = [invoice:Invoice]
 	
 	String fileName
 	String mimeType

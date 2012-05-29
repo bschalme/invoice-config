@@ -24,11 +24,27 @@
 				<thead>
 					<tr>
 					
+						<g:sortableColumn property="fileName" title="${message(code: 'attachment.fileName.label', default: 'File Name')}" />
+					
+						<g:sortableColumn property="mimeType" title="${message(code: 'attachment.mimeType.label', default: 'Mime Type')}" />
+					
+						<g:sortableColumn property="content" title="${message(code: 'attachment.content.label', default: 'Content')}" />
+					
+						<th><g:message code="attachment.invoice.label" default="Invoice" /></th>
+					
 					</tr>
 				</thead>
 				<tbody>
 				<g:each in="${attachmentInstanceList}" status="i" var="attachmentInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+					
+						<td><g:link action="show" id="${attachmentInstance.id}">${fieldValue(bean: attachmentInstance, field: "fileName")}</g:link></td>
+					
+						<td>${fieldValue(bean: attachmentInstance, field: "mimeType")}</td>
+					
+						<td>${fieldValue(bean: attachmentInstance, field: "content")}</td>
+					
+						<td>${fieldValue(bean: attachmentInstance, field: "invoice")}</td>
 					
 					</tr>
 				</g:each>

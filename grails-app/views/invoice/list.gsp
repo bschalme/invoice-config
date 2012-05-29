@@ -34,7 +34,7 @@
 					
 						<g:sortableColumn property="emailTemplatePlain" title="${message(code: 'invoice.emailTemplatePlain.label', default: 'Email Template Plain')}" />
 					
-						<th><g:message code="invoice.job.label" default="Job" /></th>
+						<g:sortableColumn property="other" title="${message(code: 'invoice.other.label', default: 'Other')}" />
 					
 					</tr>
 				</thead>
@@ -52,7 +52,7 @@
 					
 						<td>${fieldValue(bean: invoiceInstance, field: "emailTemplatePlain")}</td>
 					
-						<td>${fieldValue(bean: invoiceInstance, field: "job")}</td>
+						<td>${fieldValue(bean: invoiceInstance, field: "other")}</td>
 					
 					</tr>
 				</g:each>

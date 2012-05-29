@@ -31,6 +31,6 @@ class Job {
 	String emailTemplatePlain
 
 	String toString() {
-		return name
+		return "${customer.fullName}:${name}"
 	}
 }

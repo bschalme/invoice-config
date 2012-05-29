@@ -87,6 +87,8 @@ log4j = {
         console name:'stdout', layout:pattern(conversionPattern: '%d{ISO8601} %p %c{1}: %m%n')
     }
 	
+	debug  'hungry.wombat'
+	
 	info   'grails.app.jobs.ca.airspeed.invoice'
 
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers

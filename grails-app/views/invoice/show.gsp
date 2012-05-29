@@ -68,6 +68,26 @@
 				</li>
 				</g:if>
 			
+				<g:if test="${invoiceInstance?.other}">
+				<li class="fieldcontain">
+					<span id="other-label" class="property-label"><g:message code="invoice.other.label" default="Other" /></span>
+					
+						<span class="property-value" aria-labelledby="other-label"><g:fieldValue bean="${invoiceInstance}" field="other"/></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${invoiceInstance?.attachments}">
+				<li class="fieldcontain">
+					<span id="attachments-label" class="property-label"><g:message code="invoice.attachments.label" default="Attachments" /></span>
+					
+						<g:each in="${invoiceInstance.attachments}" var="a">
+						<span class="property-value" aria-labelledby="attachments-label"><g:link controller="attachment" action="show" id="${a.id}">${a?.encodeAsHTML()}</g:link></span>
+						</g:each>
+					
+				</li>
+				</g:if>
+			
 				<g:if test="${invoiceInstance?.invoiceLine}">
 				<li class="fieldcontain">
 					<span id="invoiceLine-label" class="property-label"><g:message code="invoice.invoiceLine.label" default="Invoice Line" /></span>
@@ -92,7 +112,6 @@
 			<g:form>
 				<fieldset class="buttons">
 					<g:hiddenField name="id" value="${invoiceInstance?.id}" />
-					<g:hiddenField name="version" value="${invoiceInstance?.version}" />
 					<g:link class="edit" action="edit" id="${invoiceInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
 					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
 					<g:actionSubmit action="email" value="Email this Invoice" />

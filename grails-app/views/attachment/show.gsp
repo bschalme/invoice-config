@@ -23,6 +23,40 @@
 			</g:if>
 			<ol class="property-list attachment">
 			
+				<g:if test="${attachmentInstance?.fileName}">
+				<li class="fieldcontain">
+					<span id="fileName-label" class="property-label"><g:message code="attachment.fileName.label" default="File Name" /></span>
+					
+						<span class="property-value" aria-labelledby="fileName-label"><g:fieldValue bean="${attachmentInstance}" field="fileName"/></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${attachmentInstance?.mimeType}">
+				<li class="fieldcontain">
+					<span id="mimeType-label" class="property-label"><g:message code="attachment.mimeType.label" default="Mime Type" /></span>
+					
+						<span class="property-value" aria-labelledby="mimeType-label"><g:fieldValue bean="${attachmentInstance}" field="mimeType"/></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${attachmentInstance?.content}">
+				<li class="fieldcontain">
+					<span id="content-label" class="property-label"><g:message code="attachment.content.label" default="Content" /></span>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${attachmentInstance?.invoice}">
+				<li class="fieldcontain">
+					<span id="invoice-label" class="property-label"><g:message code="attachment.invoice.label" default="Invoice" /></span>
+					
+						<span class="property-value" aria-labelledby="invoice-label"><g:link controller="invoice" action="show" id="${attachmentInstance?.invoice?.id}">${attachmentInstance?.invoice?.encodeAsHTML()}</g:link></span>
+					
+				</li>
+				</g:if>
+			
 			</ol>
 			<g:form>
 				<fieldset class="buttons">
