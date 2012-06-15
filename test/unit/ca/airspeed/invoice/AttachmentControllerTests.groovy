@@ -6,7 +6,7 @@ import org.junit.*
 import grails.test.mixin.*
 
 @TestFor(AttachmentController)
-@Mock(Attachment)
+@Mock([Attachment,Invoice, Job, InvoiceRecipient, Customer, Company])
 class AttachmentControllerTests {
 
 
@@ -15,6 +15,11 @@ class AttachmentControllerTests {
       params["fileName"] = 'silly-file.pdf'
 	  params["mimeType"] = 'application/pdf'
 	  params["content"] = "Hello World".bytes
+	  if (Invoice.list().size() == 0) {
+		  Seed.seedDb()
+		  def inv362 = new Invoice(job:Job.get(1), invoiceNumber:'362', deliveryStatus:'ToBeDelivered', deliveryMethod:'Email', emailTemplateHtml:'', emailTemplatePlain:'').save(failOnError: true)
+	  }
+	  params["invoice.id"] = Invoice.findByInvoiceNumber('362').id
     }
 
     void testIndex() {
